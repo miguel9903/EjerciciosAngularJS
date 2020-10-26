@@ -1,0 +1,58 @@
+<h1 class="text-center">Rock, Paper, Scissors, Lizard, Spock</h1>
+<div class="row">
+    <div class="col-12 col-md-4 p-5">
+      <div class="border">
+        <h2 class="my-4 lead text-center">Player 1</h2>
+        <div class="mx-auto">
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer1('Rock', $event)">
+              <img src="img/rock.png" alt="rock" style="width: 100%;">
+          </button>
+          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer1('Paper', $event)">
+              <img src="img/paper.png" alt="paper" style="width: 100%;">
+          </button>
+          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer1('Scissors', $event)">
+            <img src="img/scissors.png" alt="scissors" style="width: 100%;">
+          </button>
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer1('Lizard', $event)">
+            <img src="img/lizard.png" alt="lizard" style="width: 100%;">
+          </button>
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer1('Spock', $event)">
+            <img src="img/spock.png" alt="spock" style="width: 100%;">
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4 p-5">
+        <div class="border p-15">
+          <h4>Player 1</h4>
+          <div class="p-5 border">{{ player1 }}</div>
+          <h4>Player 2</h4>
+          <div class="p-5 border">{{ player2 }}</div>
+          <h4>Winner</h4>
+          <div class="p-5 border">{{ winner }}</div>
+          <button class="btn-block mt-15" ng-click="getWinner()">Play</button>
+        </div>
+    </div>
+    <div class="col-12 col-md-4 p-5">
+      <div class="border">
+        <h2 class="my-4 lead text-center">Player 2</h2>
+        <div class="mx-auto">
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer2('Rock', $event)">
+            <img src="img/rock.png" alt="rock" style="width: 100%;">
+          </button>
+          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer2('Paper', $event)">
+            <img src="img/paper.png" alt="paper" style="width: 100%;">
+          </button>
+          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer2('Scissors', $event)">
+            <img src="img/scissors.png" alt="scissors" style="width: 100%;">
+          </button>
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer2('Lizard', $event)">
+            <img src="img/lizard.png" alt="lizard" style="width: 100%;">
+          </button>
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer2('Spock', $event)">
+            <img src="img/spock.png" alt="spock" style="width: 100%;">
+          </button>
+        </div>
+      </div>
+    </div>
+</div>

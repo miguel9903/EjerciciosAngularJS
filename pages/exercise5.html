@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-12">
+        <div>
+            <div class="mt-15">
+                <button ng-click="startGame()" class="btn btn-success" ng-disabled="formJugador.nombreJugador.$invalid">Jugar</button>
+                <button ng-click="clearBoard()" class="btn btn-danger" ng-disabled="formJugador.nombreJugador.$invalid">Limpiar</button>
+            </div>
+        </div>
+        <div class="triqui_box">
+            <div class="p-5 text-center">
+                <div>
+                    <p><b>Jugador 1: </b>{{ idJuego }}</p>
+                    <p><b>Jugador 1: </b>{{ jugador1 }}</p>
+                    <p><b>Jugador 2: </b>{{ jugador2 }}</p>
+                    <p><b>Turno actual: </b>Jugador {{ turnoActual }}</p>
+                </div>
+                <div>
+                   <p id="msEspera"></p>
+                </div>
+                <div>
+                    <p ng-if="existeGanador"><b>Ganador: </b>{{ nombreGanador }}</p>
+                </div> 
+            </div>
+            <div class="my-5">
+                <div class="triqui_row">
+                    <button class="triqui_col" id="button0" ng-click="play(0,0)"></button>
+                    <button class="triqui_col" id="button1" ng-click="play(0,1)"></button>
+                    <button class="triqui_col" id="button2" ng-click="play(0,2)"></button>
+                </div>
+                <div class="triqui_row">
+                    <button class="triqui_col" id="button3" ng-click="play(1,0)"></button>
+                    <button class="triqui_col" id="button4" ng-click="play(1,1)"></button>
+                    <button class="triqui_col" id="button5" ng-click="play(1,2)"></button>
+                </div>
+                <div class="triqui_row">
+                    <button class="triqui_col" id="button6" ng-click="play(2,0)"></button>
+                    <button class="triqui_col" id="button7" ng-click="play(2,1)"></button>
+                    <button class="triqui_col" id="button8" ng-click="play(2,2)"></button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

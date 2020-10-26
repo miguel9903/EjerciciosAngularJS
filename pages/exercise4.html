@@ -1,0 +1,29 @@
+<h1 class="text-center m-5">Consume Web Api</h1>
+<hr>
+<div class="my-15">
+    <button ng-click="open('', 'add')" class="btn btn-success">Add Product</button> 
+</div>
+<div class="row">
+    <div class="col">
+        <table class="table ">
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Product Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="product in products">
+                    <td>{{ product.ProductID }}</td>
+                    <td>{{ product.ProductName }}</td>
+                    <td>
+                      <button ng-click="open('', 'view', product.ProductID)" class="btn btn-primary mx-5">View</button>  
+                      <button ng-click="open('', 'edit', product.ProductID)" class="btn btn-warning mx-5">Edit</button>  
+                      <button ng-click="open('', 'delete', product.ProductID)" class="btn btn-danger mx-5">Delete</button> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

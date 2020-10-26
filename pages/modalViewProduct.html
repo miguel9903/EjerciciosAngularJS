@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Product Detail</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <ul>
+      <li><b>Product ID: </b>{{ data.ProductID }}</li>
+      <li><b>Product Name: </b>{{ data.ProductName }}</li>
+      <li><b>Supplier ID: </b>{{ data.SupplierID }}</li>
+      <li><b>Category ID: </b>{{ data.CategoryID }}</li>
+      <li><b>Quantity Per Unit: </b>{{ data.QuantityPerUnit }}</li>
+      <li><b>Unit Price: </b>{{ data.UnitPrice }}</li>
+      <li><b>Units In Stock: </b>{{ data.UnitsInStock }}</li>
+      <li><b>Units On Order: </b>{{ data.UnitsOnOrder }}</li>
+      <li><b>Reorder Level: </b>{{ data.ReorderLevel }}</li>
+      <li><b>Discontinued: </b>{{ data.Discontinued }}</li>    
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+</div>
