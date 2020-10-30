@@ -1,4 +1,4 @@
-angular.module("angularApp").controller('exercise5Controller', function($scope, $http, $rootScope) {
+angular.module("angularApp").controller('exercise5Controller', function($scope, $http, $rootScope, $interval) {
 
     $scope.idJuego = ""
     $scope.jugador1 = "";
@@ -7,32 +7,16 @@ angular.module("angularApp").controller('exercise5Controller', function($scope, 
     $scope.nombreJugador = $rootScope.userName;
     $scope.nombreGanador = "No hay ganador";
     $scope.turnoActual = "";
-    var msEspera = document.getElementById("msEspera");
+    $scope.juegoIniciado = false;
+    $scope.jugadaGanadora = [];
+    $scope.tipoJugadaGanadora = "";
+    $scope.board = [[], [], []]; 
+    $scope.disableBoard = true;
 
-    $scope.board = [[], [], []]; //Tablero de divs del juego
-    let num = 0;
-    for(let i = 0; i < 3; i++){
-        for(let j = 0; j < 3; j++){
-            $scope.board[i][j] = document.getElementById("button" + num);
-            num++;
-        }
-    }
-
-    $scope.disableBoard = function(value = true){
-        for(let i = 0; i < 3; i++){
-            for(let j = 0; j < 3; j++){
-                if(value){
-                    $scope.board[i][j].setAttribute("disabled", "");
-                }else{
-                    $scope.board[i][j].removeAttribute("disabled");
-                }
-            }
-        }
-    }
-
-    $scope.disableBoard();
-
-    $scope.startGame = function(){ // Crea un nuevo juego o une al jugador a uno ya existente
+    /* Permite hacer una peticion post para crear un nuevo juego o unir 
+    al jugador a uno ya existente */
+    $scope.startGame = function(){
+        $scope.juegoIniciado = true;
         $http.post('https://localhost:44374/api/triqui/', JSON.stringify($scope.nombreJugador))
         .then(function(response) { 
 
@@ -41,71 +25,25 @@ angular.module("angularApp").controller('exercise5Controller', function($scope, 
             $scope.jugador2 = response.data.Jugador2;
             $scope.turnoActual = response.data.Turno;
             $scope.joinPlayers();
-
+            
         }, function(response){
             console.log("HTTP request error " + response.status);
         }); 
     }
-
-    $scope.joinPlayers = function(){ // Comprueba cada 2 seg si hay jugador2
-        let interval = setInterval(() => {
+    
+    /* Pwemite consultar cada 2s si se ha unido el jugador 2. De ser asi, 
+       se llama a otro método que consulta el estado del juego cada 2s*/
+    $scope.joinPlayers = function(){ 
+        var interval = $interval(function () {
             $http.get('https://localhost:44374/api/triqui/' + $scope.idJuego)
             .then(function(response){
-     
+
                 $scope.jugador1 = response.data.Jugador1;
                 $scope.jugador2 = response.data.Jugador2;
 
-                if($scope.jugador2 == ""){
-                    console.log("Esperando a que se conecte el otro jugador...");
-                    msEspera.textContent = "Esperando a que se conecte el otro jugador..."; 
-                }else{
-                    console.log("Jugadores conectados.");
-                    msEspera.textContent = "Jugadores conectados";
-                    clearInterval(interval);   
+                if($scope.jugador2 != ""){
+                    $interval.cancel(interval);
                     $scope.checkGameStatus(); 
-                } 
-              
-            }, function(response){
-                console.log("HTTP request error " + response.status);
-            }); 
-        }, 1000);
-    }
-
-    $scope.checkGameStatus = function(){ // Consulta cada 2s el estado del juego
-        let interval = setInterval(() => {
-            $http.get('https://localhost:44374/api/triqui/' + $scope.idJuego)
-            .then(function(response){  
-
-                $scope.printBoard(response.data.Matriz); //Vuelve a pintar el tablero
-                $scope.turnoActual = response.data.Turno; // Actualiza el turno actual
-                if(response.data.Ganador != 0){ // Verifica si hay ganador
-                    $scope.existeGanador = true;
-                    $scope.nombreGanador = "Jugador " + response.data.Ganador;
-                    $scope.printBoardWinner(response.data.JugadaGanadora, response.data.TipoJugadaGanadora);
-                    msEspera.textContent = "";
-                }
-
-                if($scope.nombreJugador == response.data.Jugador1){ // Habilita o deshabilita el tablero
-                    if(response.data.Turno == 2){
-                        $scope.disableBoard();
-                        msEspera.innerHTML = 'Esperando al jugador 2...';
-                    }else{
-                        $scope.disableBoard(false);
-                        msEspera.innerHTML = '';
-                    }
-                }else if($scope.nombreJugador == response.data.Jugador2){
-                    if(response.data.Turno == 1){
-                        $scope.disableBoard();
-                        msEspera.innerHTML = 'Esperando al jugador 1...';
-                    }else{
-                        $scope.disableBoard(false);
-                        msEspera.innerHTML = '';
-                    }
-                } 
-
-                if($scope.existeGanador){
-                    clearInterval(interval);
-                    $scope.existeGanador = false;
                 }
 
             }, function(response){
@@ -114,7 +52,36 @@ angular.module("angularApp").controller('exercise5Controller', function($scope, 
         }, 2000);
     }
 
-    $scope.play = function(fila, columna){ // Realiza la jugada
+    /* Permite consultar el estado del juego cada 2s, para verificar si han habido
+    cambios en el tablero, en el turno o si existe un ganador*/
+    $scope.checkGameStatus = function(){ 
+        var interval = $interval(function () {
+            $http.get('https://localhost:44374/api/triqui/' + $scope.idJuego)
+            .then(function(response){
+
+                $scope.board = response.data.Matriz;
+                $scope.turnoActual = response.data.Turno;
+
+                if(response.data.Ganador != 0){ s
+                    $scope.existeGanador = true;
+                    $scope.nombreGanador = "Jugador " + response.data.Ganador;
+                }
+                         
+                $scope.disabledBoard(); 
+
+                if($scope.existeGanador){
+                    $interval.cancel(interval);
+                }
+
+            }, function(response){
+                console.log("HTTP request error " + response.status);
+            }); 
+        }, 2000);
+    }
+
+    /* Permite realizar una jugada, modificando la matriz del juego actual, mediante 
+    el envio de una jugada */
+    $scope.play = function(fila, columna){ 
         let jugada = {
             "fila": fila,
             "columna": columna
@@ -122,57 +89,62 @@ angular.module("angularApp").controller('exercise5Controller', function($scope, 
         if($scope.existeGanador == false){
             $http.post('https://localhost:44374/api/triqui/' + $scope.idJuego, JSON.stringify(jugada))
             .then(function(response){
-                $scope.printBoard(response.data.Matriz);
+
+                $scope.board = response.data.Matriz;
                 if(response.data.Ganador != 0){
                     $scope.existeGanador = true;
                     $scope.nombreGanador = "Jugador " + response.data.Ganador;
-                    $scope.printBoardWinner(response.data.JugadaGanadora, response.data.TipoJugadaGanadora);
+                    $scope.jugadaGanadora = response.data.JugadaGanadora;
+                    $scope.tipoJugadaGanadora = response.data.TipoJugadaGanadora;
                 }
+
             }, function(response){
                 console.log("HTTP request error " + response.status);
             });
         }
     }
 
-    $scope.printBoard = function(matriz){
-        for(let i = 0; i < 3; i++){
-            for(let j = 0; j < 3; j++){
-                if(matriz[i][j] == 1){
-                    $scope.board[i][j].innerHTML = "X";
-                }else if(matriz[i][j] == 2){
-                    $scope.board[i][j].innerHTML = "O";
-                }else{
-                    $scope.board[i][j].innerHTML = "";
-                }
+    /* Permite habilitar o inhabilitar el tablero dependiendo del 
+    turno actual y el jugador */
+    $scope.disabledBoard = function(){
+        if($scope.nombreJugador == response.data.Jugador1){ 
+            if(response.data.Turno == 2){
+                $scope.disableBoard = true;
+            }else{
+                $scope.disableBoard = false;
             }
+        }else if($scope.nombreJugador == response.data.Jugador2){
+            if(response.data.Turno == 1){
+                $scope.disableBoard = true;
+            }else{
+                $scope.disableBoard = false;
+            }
+        } 
+    }
+
+    /* Permite comprobar si existe ganador, en cuyo caso, se devuelve el nombre 
+        de la clase correspondiente para que se pinte en cada boton, la jugada ganadora*/
+    $scope.checkWinner = function(fila, columna){
+        let clase = "";
+        if($scope.tipoJugadaGanadora != ""){
+            for(let i = 0; i < 3; i++){
+                if($scope.jugadaGanadora[i][0] == fila && $scope.jugadaGanadora[i][1] == columna){
+                    if ($scope.tipoJugadaGanadora == "Horizontal") {
+                        clase = "ganador_horizontal";
+                    } else if ($scope.tipoJugadaGanadora  == "Vertical") {
+                        clase = "ganador_vertical";
+                    } else if ($scope.tipoJugadaGanadora  == "Diagonal") {
+                        clase = "ganador_diagonal_inversa";
+                    } else {
+                        clase = "ganador_diagonal";
+                    }
+                }
+            }         
         }
-    } 
+        return clase;
+    }
 
     $scope.clearBoard = function(){
-        for(let i = 0; i < 3; i++){
-            for(let j = 0; j < 3; j++){
-                $scope.existeGanador = false;
-                $scope.board[i][j].innerHTML = "";
-                $scope.board[i][j].style.background = "none";
-            }
-        }
+        $scope.existeGanador = false;
     } 
-
-    $scope.printBoardWinner = function(matriz, tipoJugada){
-        for(let i = 0; i < 3; i++){
-            if (tipoJugada == "Horizontal") {
-                $scope.board[matriz[i][0]][matriz[i][1]].style.backgroundImage = "url('img/linea_horizontal.png')";
-                $scope.board[matriz[i][0]][matriz[i][1]].style.backgroundSize = "cover"; 
-            } else if (tipoJugada == "Vertical") {
-                $scope.board[matriz[i][0]][matriz[i][1]].style.backgroundImage = "url('img/linea_vertical.png')";
-                $scope.board[matriz[i][0]][matriz[i][1]].style.backgroundSize = "cover"; 
-            } else if (tipoJugada == "Diagonal") {
-                $scope.board[matriz[i][0]][matriz[i][1]].style.backgroundImage = "url('img/linea_diagonal_inversa.png')";
-                $scope.board[matriz[i][0]][matriz[i][1]].style.backgroundSize = "cover"; 
-            } else {
-                $scope.board[matriz[i][0]][matriz[i][1]].style.backgroundImage = "url('img/linea_diagonal.png')";
-                $scope.board[matriz[i][0]][matriz[i][1]].style.backgroundSize = "cover"; 
-            }
-        }
-    }  
-});
+}); 

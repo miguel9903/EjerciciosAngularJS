@@ -1,27 +1,27 @@
 angular.module("angularApp").controller('exercise4Controller', function($scope, $http, $uibModal) {
 
     $scope.products = [];
-   
-    $http.get('https://localhost:44324/api/products')
-    .then(function(response){
-        $scope.products  = response.data;
-    }, function(response){
-        console.log("HTTP request error " + response.status);
-    }); 
 
-    $scope.open = function (size, action, productID = '') {   
+    // Permite conusltar el API y cargar los productos en el array products
+    $scope.init = function() {
+        $http.get('https://localhost:44324/api/products')
+        .then(function(response){
+            $scope.products  = response.data;
+        }, function(response){
+            console.log("HTTP request error " + response.status);
+        }); 
+    }
 
+    // Permite abrir la ventana modal
+    $scope.open = function (size, action, product) {   
+        
         let modalTemplate = '';
    
         if (action == 'view') {
             modalTemplate = 'views/modalViewProduct.html';
-        } else if (action == 'edit') {
-            modalTemplate = 'views/modalEditProduct.html';
-        } else if (action == 'add') {
-            modalTemplate = 'views/modalAddProduct.html';
         } else {
-            modalTemplate = 'views/modalDeleteProduct.html';
-        }
+            modalTemplate = 'views/modalAddEditProduct.html';
+        } 
 
         var modalInstance = $uibModal.open({
           animation: true,
@@ -32,85 +32,82 @@ angular.module("angularApp").controller('exercise4Controller', function($scope, 
           size: size,
           resolve: {
             data: function () {
-              let product = 'Not data';
-              if (productID != ''){
-                  product = $scope.products.filter(p => p.ProductID == productID);
-                  return product[0];
-              }
-              return product;
+                if(product){
+                    return product;
+                }else{
+                    return "";
+                }         
             }
           }
         });
+
+        //Captura los cambios realizados en la instancia del modal
+        modalInstance.result.then(function(parameter) {
+
+            let product = parameter;
+            let index = $scope.products.findIndex(p => p.ProductID == product.ProductID);
+        
+           if(action == "add"){
+                $scope.products.push(product);
+           } else if (action == "edit") {
+                $scope.products[index] = product;
+           } 
+        });        
     };  
+
+    // Permite hacer una peticion delete y eliminar un producto
+    $scope.deleteProduct = function (product) {
+        bootbox.confirm("¿Desea eliminar este producto?", function(result){ 
+            if(result){
+                $http.delete('https://localhost:44324/api/products/' + product.ProductID)
+                .then(function(response){
+                    let index = $scope.products.findIndex(p => p.ProductID == product.ProductID);
+                    $scope.products.splice(index, 1);
+                }, function(response){
+                    console.log("HTTP request error " + response.status);
+                });
+            }
+        });
+    };
+
+    $scope.init();
 });
 
-// View and delete product
 angular.module("angularApp").controller('modalController', function ($uibModalInstance, data, $scope, $http) {
 
     $scope.data = data;
 
-    $scope.productAdd = {
-        "ProductName": "",
-        "SupplierID": "",
-        "CategoryID": "",
-        "QuantityPerUnit": "",
-        "UnitPrice": "",
-        "UnitsInStock": "",
-        "UnitsOnOrder": "",
-        "ReorderLevel": "",
-        "Discontinued": true
+    $scope.product= {
+        "ProductID": $scope.data.ProductID,
+        "ProductName": $scope.data.ProductName,
+        "SupplierID": $scope.data.SupplierID,
+        "CategoryID": $scope.data.CategoryID,
+        "QuantityPerUnit": $scope.data.QuantityPerUnit,
+        "UnitPrice": $scope.data.UnitPrice,
+        "UnitsInStock": $scope.data.UnitsInStock,
+        "UnitsOnOrder": $scope.data.UnitsOnOrder,
+        "ReorderLevel": $scope.data.ReorderLevel,
+        "Discontinued": $scope.data.Discontinued
     }
 
-    $scope.productEdit = {
-        "ProductName": data.ProductName,
-        "SupplierID": data.SupplierID,
-        "CategoryID": data.CategoryID,
-        "QuantityPerUnit": data.QuantityPerUnit,
-        "UnitPrice": data.UnitPrice,
-        "UnitsInStock": data.UnitsInStock,
-        "UnitsOnOrder": data.UnitsOnOrder,
-        "ReorderLevel": data.ReorderLevel,
-        "Discontinued": data.Discontinued
+    // Permite hacer peticiones post y put, para agregar o editar un producto
+    $scope.addEditProduct = function(){
+        if($scope.product.ProductID == undefined){
+            $http.post('https://localhost:44324/api/products', JSON.stringify($scope.product))
+            .then(function(response){
+                $uibModalInstance.close($scope.product);
+            }, function(response){
+                console.log("HTTP request error " + response.status);
+            });
+        }else{
+            $http.put('https://localhost:44324/api/products/' + $scope.product.ProductID, JSON.stringify($scope.product))
+            .then(function(response){
+                $uibModalInstance.close($scope.product);
+            }, function(response){
+                console.log("HTTP request error " + response.status);
+            });
+        }
     }
-
-    // Add product
-    $scope.addProduct = function () {
-        console.log($scope.productAdd);
-        $http.post('https://localhost:44324/api/products', JSON.stringify($scope.productAdd))
-        .then(function(response){
-            console.log(response.status);
-        }, function(response){
-            console.log("HTTP request error " + response.status);
-        });
-        $uibModalInstance.close();
-        //location.reload();
-    };
-    
-    // Edit product
-    $scope.editProduct = function (productID) {
-        console.log($scope.productEdit);
-        console.log(productID);
-        $http.put('https://localhost:44324/api/products/' + productID, JSON.stringify($scope.productEdit))
-        .then(function(response){
-            console.log(response.status);
-        }, function(response){
-            console.log("HTTP request error " + response.status);
-        });
-        $uibModalInstance.close();
-        //location.reload();
-    };
-
-    //Delete product
-    $scope.deleteProduct = function (productID) {
-        $http.delete('https://localhost:44324/api/products/' + productID)
-        .then(function(response){
-            console.log(response.status);
-        }, function(response){
-            console.log("HTTP request error " + response.status);
-        });
-        $uibModalInstance.close();
-        //location.reload();
-    };
 
     $scope.ok = function () {
         $uibModalInstance.close();

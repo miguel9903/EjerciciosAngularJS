@@ -3,17 +3,19 @@ angular.module("angularApp").controller('exercise1Controller', function($scope) 
     $scope.player1 = "Unselected";
     $scope.player2 = "Unselected";
     $scope.winner = "Not winner";
-
-    $scope.playPlayer1 = function(opc, e) {
+    
+    // Permite establacer la jugada seleccionada por el jugador 1
+    $scope.playPlayer1 = function(opc) {
         $scope.player1 = opc;
-        e.target.parentElement.classList.add("selected");
     }
 
-    $scope.playPlayer2 = function(opc, e) {
+    // Permite establacer la jugada seleccionada por el jugador 2
+    $scope.playPlayer2 = function(opc) {
         $scope.player2 = opc;
-        e.target.parentElement.classList.add("selected");
     }
 
+    /* Permite obtener el nombre del ganador a partir de las jugadas
+    seleccionadas */
     $scope.getWinner = function() {
         if ($scope.player1 != "Unselected" && $scope.player2 != "Unselected") {
             if ($scope.player1 == $scope.player2) {

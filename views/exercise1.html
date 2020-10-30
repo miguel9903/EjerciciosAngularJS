@@ -4,19 +4,24 @@
       <div class="border">
         <h2 class="my-4 lead text-center">Player 1</h2>
         <div class="mx-auto">
-          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer1('Rock', $event)">
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer1('Rock')" 
+                  ng-class="player1 == 'Rock' ? 'selected' : 'unselected'">
               <img src="img/rock.png" alt="rock" style="width: 100%;">
           </button>
-          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer1('Paper', $event)">
+          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer1('Paper')"
+                  ng-class="player1 == 'Paper' ? 'selected' : 'unselected'">
               <img src="img/paper.png" alt="paper" style="width: 100%;">
           </button>
-          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer1('Scissors', $event)">
+          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer1('Scissors')"
+                  ng-class="player1 == 'Scissors' ? 'selected' : 'unselected'">
             <img src="img/scissors.png" alt="scissors" style="width: 100%;">
           </button>
-          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer1('Lizard', $event)">
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer1('Lizard')"
+                  ng-class="player1 == 'Lizard' ? 'selected' : 'unselected'">
             <img src="img/lizard.png" alt="lizard" style="width: 100%;">
           </button>
-          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer1('Spock', $event)">
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer1('Spock')"
+                  ng-class="player1 == 'Spock' ? 'selected' : 'unselected'">
             <img src="img/spock.png" alt="spock" style="width: 100%;">
           </button>
         </div>
@@ -37,19 +42,24 @@
       <div class="border">
         <h2 class="my-4 lead text-center">Player 2</h2>
         <div class="mx-auto">
-          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer2('Rock', $event)">
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer2('Rock')"
+                  ng-class="player2 == 'Rock' ? 'selected' : 'unselected'">
             <img src="img/rock.png" alt="rock" style="width: 100%;">
           </button>
-          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer2('Paper', $event)">
+          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer2('Paper')"
+                  ng-class="player2 == 'Paper' ? 'selected' : 'unselected'">
             <img src="img/paper.png" alt="paper" style="width: 100%;">
           </button>
-          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer2('Scissors', $event)">
+          <button class="btn border-primary m-5 btn-size"  ng-click="playPlayer2('Scissors')"
+                  ng-class="player2 == 'Scissors' ? 'selected' : 'unselected'">
             <img src="img/scissors.png" alt="scissors" style="width: 100%;">
           </button>
-          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer2('Lizard', $event)">
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer2('Lizard')"
+                  ng-class="player2 == 'Lizard' ? 'selected' : 'unselected'">
             <img src="img/lizard.png" alt="lizard" style="width: 100%;">
           </button>
-          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer2('Spock', $event)">
+          <button class="btn border-primary m-5 btn-size" ng-click="playPlayer2('Spock')"
+                  ng-class="player2 == 'Spock' ? 'selected' : 'unselected'">
             <img src="img/spock.png" alt="spock" style="width: 100%;">
           </button>
         </div>

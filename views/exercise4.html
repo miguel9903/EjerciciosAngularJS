@@ -18,9 +18,9 @@
                     <td>{{ product.ProductID }}</td>
                     <td>{{ product.ProductName }}</td>
                     <td>
-                      <button ng-click="open('', 'view', product.ProductID)" class="btn btn-primary mx-5">View</button>  
-                      <button ng-click="open('', 'edit', product.ProductID)" class="btn btn-warning mx-5">Edit</button>  
-                      <button ng-click="open('', 'delete', product.ProductID)" class="btn btn-danger mx-5">Delete</button> 
+                      <button ng-click="open('', 'view', product)" class="btn btn-primary mx-5">View</button>  
+                      <button ng-click="open('', 'edit', product)" class="btn btn-warning mx-5">Edit</button>  
+                      <button ng-click="deleteProduct(product)" class="btn btn-danger mx-5">Delete</button> 
                     </td>
                 </tr>
             </tbody>

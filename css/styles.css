@@ -23,6 +23,10 @@
     border: 2px solid green;
 }
 
+.unselected{
+    border: 2px solid dodgerblue;
+}
+
 .m-5{
     margin: 5px;
 }
@@ -120,14 +124,24 @@
     right: 0;
 }
 
-.turno1{
-    background-color: dodgerblue;
-    color: white;
+.ganador_horizontal{
+    background-image: url('../img/linea_horizontal.png');
+    background-size: cover;
 }
 
-.turno2{
-    background-color: green;
-    color: white;
+.ganador_vertical{
+    background-image: url('../img/linea_vertical.png');
+    background-size: cover;
+}
+
+.ganador_diagonal{
+    background-image: url('../img/linea_diagonal.png');
+    background-size: cover;
+}
+
+.ganador_diagonal_inversa{
+    background-image: url('../img/linea_diagonal_inversa.png');
+    background-size: cover;
 }
 
 .ganador{
